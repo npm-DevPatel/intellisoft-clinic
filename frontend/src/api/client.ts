@@ -65,6 +65,9 @@ export const api = {
       body: JSON.stringify(data),
     }),
 
+    getVitals: (patientId: string, visitDate: string) =>
+    request<VitalsResult[]>(`/patients/${id(patientId)}/vitals?visit_date=${visitDate}`),
+
   submitForm: (patientId: string, data: VisitFormInput) =>
     request<VisitForm>(`/patients/${id(patientId)}/visit-forms`, {
       method: "POST",

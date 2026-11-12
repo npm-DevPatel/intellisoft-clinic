@@ -122,3 +122,15 @@ def test_patient_list_and_date_filter(client):
 
     one_day = client.get("/patients", params={"visit_date": "2026-11-06"}).json()
     assert [p["name"] for p in one_day] == ["Brian Otieno"]
+
+
+def test_get_vitals_by_date(client):
+    client.post("/patients", json=PATIENT)
+    client.post("/patients/P001/vitals", json=vitals(date="2026-11-05", weight=70))
+    client.post("/patients/P001/vitals", json=vitals(date="2026-11-06", weight=90))
+
+    both = client.get("/patients/P001/vitals").json()
+    assert len(both) == 2
+
+    one = client.get("/patients/P001/vitals", params={"visit_date": "2026-11-06"}).json()
+    assert [v["next_form"] for v in one] == ["overweight"]
